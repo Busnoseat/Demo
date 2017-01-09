@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.busnoseat.demo.core.dal.dao.UserDOMapper">
+    <resultMap id="testUserMap" type="com.busnoseat.demo.core.dal.model.UserDO">
+        <id column="ID" property="userId" jdbcType="DECIMAL"/>
+        <result column="USERNAME" property="userName" jdbcType="VARCHAR"/>
+    </resultMap>
+
+
+    <select id="queryUser" parameterType="com.busnoseat.demo.core.dal.model.UserDO"
+            resultMap="testUserMap">
+    <include refid="queryUserSql" />
+    </select>
+    <!--分页查询的出参-->
+    <sql id="queryUserSql">
+        select
+        ID , USERNAME
+        from t_passport_admin t where 1=1
+        <if test="record.userId !=null">
+            and ID=#{record.userId,jdbcType=DECIMAL}
+        </if>
+        <if test="record.userName !=null  and record.userName != ''">
+            and USERNAME=#{record.userName,jdbcType=DECIMAL}
+        </if>
+    </sql>
+
+
+    <select id="count" parameterType="com.busnoseat.demo.core.dal.model.UserDO" resultType="int">
+        SELECT COUNT(*) FROM
+        ( <include refid="queryUserSql" />)
+    </select>
+
+    <update id="modify">
+        UPDATE T_PASSPORT_ADMIN
+        <set>
+            <if test="userName !=null and userName != ''">
+                USERNAME=#{userName,jdbcType=VARCHAR},
+            </if>
+        </set>
+    </update>
+</mapper>

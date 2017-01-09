@@ -1,0 +1,97 @@
+<?xml version="1.0"?>
+<configuration>
+	<property resource="${env}/config.properties" />
+	<timestamp key="bySecond" datePattern="yyyyMMdd'T'HHmmss" />
+	<!-- 存放日志文件的要路径 -->
+	<substitutionProperty name="LOG_HOME" value="${LOG_HOME}" />
+	<!--日志文件存入路径 -->
+
+	<substitutionProperty name="PROJECT_NAME" value="${appName}" />
+	<substitutionProperty name="LOG_HOME_SERVICE"
+		value="${LOG_HOME}/${PROJECT_NAME}/service" />
+	<substitutionProperty name="LOG_HOME_ERROR"
+		value="${LOG_HOME}/${PROJECT_NAME}/error" />
+	<substitutionProperty name="LOG_HOME_COMMON"
+		value="${LOG_HOME}/${PROJECT_NAME}/common" />
+	<!-- ch.qos.logback.core.ConsoleAppender 控制台输出 -->
+	<appender name="console" class="ch.qos.logback.core.ConsoleAppender">
+		<encoder class="ch.qos.logback.core.encoder.LayoutWrappingEncoder">
+			<layout class="com.busnoseat.common.log.LayoutLog" />
+		</encoder>
+	</appender>
+	<!-- service -->
+	<appender name="serviceRolling"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>${LOG_HOME_SERVICE}.txt</file>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>${LOG_HOME_SERVICE}-%d{yyyy-MM-dd_HH}.%i.log
+			</fileNamePattern>
+
+			<TimeBasedFileNamingAndTriggeringPolicy
+				class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+				<MaxFileSize>100MB</MaxFileSize>
+			</TimeBasedFileNamingAndTriggeringPolicy>
+		</rollingPolicy>
+		<encoder class="ch.qos.logback.core.encoder.LayoutWrappingEncoder">
+			<layout class="com.busnoseat.common.log.LayoutLog" />
+		</encoder>
+	</appender>
+
+	<!-- common -->
+	<appender name="commonRolling"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>${LOG_HOME_COMMON}.txt</file>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>${LOG_HOME_COMMON}-%d{yyyy-MM-dd_HH}.%i.log
+			</fileNamePattern>
+
+			<TimeBasedFileNamingAndTriggeringPolicy
+				class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+				<MaxFileSize>100MB</MaxFileSize>
+			</TimeBasedFileNamingAndTriggeringPolicy>
+		</rollingPolicy>
+		<encoder class="ch.qos.logback.core.encoder.LayoutWrappingEncoder">
+			<layout class="com.busnoseat.common.log.LayoutLog" />
+		</encoder>
+	</appender>
+	<!-- integration -->
+	<appender name="errorRolling"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<filter class="ch.qos.logback.classic.filter.LevelFilter">
+			<level>ERROR</level>
+			<onMatch>ACCEPT</onMatch>
+			<onMismatch>DENY</onMismatch>
+		</filter>
+		<file>${LOG_HOME_ERROR}.txt</file>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>${LOG_HOME_ERROR}-%d{yyyy-MM-dd_HH}.%i.log
+			</fileNamePattern>
+
+			<TimeBasedFileNamingAndTriggeringPolicy
+				class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+				<MaxFileSize>100MB</MaxFileSize>
+			</TimeBasedFileNamingAndTriggeringPolicy>
+		</rollingPolicy>
+		<encoder class="ch.qos.logback.core.encoder.LayoutWrappingEncoder">
+			<layout class="com.busnoseat.common.log.LayoutLog" />
+		</encoder>
+	</appender>
+	<logger name="com.busnoseat.model" level="INFO">
+		<appender-ref ref="serviceRolling" />
+	</logger>
+
+	<logger name="com.busnoseat.runtime" level="INFO">
+		<appender-ref ref="commonRolling" />
+	</logger>
+
+	<logger name="dao" level="DEBUG">
+		<!--daoFILE为实际定义的appender-->
+		<appender-ref ref="serviceRolling" />
+	</logger>
+	<!-- 日志级别 -->
+	<root level="INFO">
+		<appender-ref ref="console" />
+		<appender-ref ref="errorRolling" />
+	</root>
+
+</configuration>   
