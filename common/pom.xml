@@ -24,6 +24,7 @@
         <mybatis.version>3.2.2</mybatis.version>
         <commons-lang.version>2.6</commons-lang.version>
         <spring.version>4.1.7.RELEASE</spring.version>
+        <qrcode.version>3.3.0</qrcode.version>
     </properties>
 
 
@@ -86,6 +87,12 @@
             </exclusions>
         </dependency>
 
+        <!-- ==================== qrcode ======================== -->
+        <dependency>
+            <groupId>com.google.zxing</groupId>
+            <artifactId>core</artifactId>
+            <version>${qrcode.version}</version>
+        </dependency>
 
     </dependencies>
 
